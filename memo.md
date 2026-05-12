@@ -42,3 +42,4 @@ sudo systemctl start mariadb
 @if ($errors->any())
     エラーがあるよ<br>
 @endif
+
