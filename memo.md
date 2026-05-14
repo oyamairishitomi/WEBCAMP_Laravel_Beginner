@@ -94,3 +94,64 @@ currentPage()	現在のページ番号
 onFirstPage()	最初のページかどうか（true/false）
 previousPageUrl()	前のページのURL（なければnull）
 nextPageUrl()	次のページのURL（なければnull）
+/task/list と /task/register は先頭が /task で共通しているので、prefix でグループ化しながら詳細閲覧のルートも追加します。
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('/task')->group(function () {
+        Route::get('/list', [TaskController::class, 'list']);
+
+
+できた。ところで、task/listでいけるときと、task.listにしないといけないときのちがいってなに
+いい気づきです。
+
+/task/list（スラッシュ区切り） → URL
+
+
+return redirect('/task/list');
+ブラウザのアドレスバーに入力するURLそのものです。
+
+task.list（ドット区切り） → テンプレートファイルのパス
+
+
+return view('task.list', [...]);
+resources/views/ 以下のファイルパスをドットで表したものです。
+
+
+resources/views/task/list.blade.php
+                 ↓
+              task.list
+ディレクトリの / がドット . に変わっているだけです。
+
+まとめると：
+
+書き方	用途	例
+/task/list	URL（ブラウザのアドレス）	redirect('/task/list')
+task.list	テンプレートファイルのパス	view('task.list')
+全然別の話なので混同しないように注意です。
+
+
+route('ルート名', ['パラメータ名' => 値])
+それぞれ web.php の記述と対応しています。
+
+
+// web.php
+Route::get('/detail/{task_id}', ...)->name('detail');
+//                  ↑パラメータ名          ↑ルート名
+
+// テンプレート
+route('detail', ['task_id' => $task->id])
+//      ↑ルート名   ↑パラメータ名   ↑値
+パラメータが不要なルートは第2引数を省略できます。
+
+
+route('front.index')  // パラメータなし
+パラメータが複数あれば配列に追加するだけです。
+
+
+route('example', ['id' => 1, 'page' => 2])
+つまり 「name()で付けた名前」と「{}で定義したパラメータ名」 の2つを把握していれば書けます。
+
+
+
+Q.テンプレートファイルのときだけ.にするということか？
