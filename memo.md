@@ -76,3 +76,21 @@ Task::PRIORITY_VALUE        // → [1 => '低い', 2 => '普通', 3 => '高い']
 
 TaskModel::PRIORITY_VALUE   // → [1 => '低い', 2 => '普通', 3 => '高い']
 と書けるわけです。:: はインスタンスを作らずにクラスのメソッドや定数に直接アクセスするときに使う記号です。
+
+guarded / fillable が必要な理由 — create() はマスアサインメント脆弱性対策のためどちらかの設定が必要
+
+'front.task_register_success' はどこで指定しているか — 自分で決めたキー名で、Controllerでセット・Bladeで同じキー名で取り出す
+
+where() の2つの引数の意味 — 第1引数がカラム名、第2引数が比較する値でデフォルトはイコール
+
+get() はどこから来たのか — LaravelのEloquentが用意しているメソッドで、呼んで初めてSQLが実行される
+
+定数をクラスの外に書いてしまった — クラス定数はクラスの中に書かないと $this::定数名 で参照できない
+
+各メソッドの意味：
+
+メソッド	意味
+currentPage()	現在のページ番号
+onFirstPage()	最初のページかどうか（true/false）
+previousPageUrl()	前のページのURL（なければnull）
+nextPageUrl()	次のページのURL（なければnull）

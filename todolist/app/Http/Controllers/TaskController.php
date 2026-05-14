@@ -11,17 +11,13 @@ use App\Models\Task as TaskModel;
 class TaskController extends Controller
 {
     public function list(){
+        $per_page = 2;
+
         $list = TaskModel::where('user_id', Auth::id())
                         ->orderBy('priority','DESC')
                         ->orderBy('period')
                         ->orderBy('created_at')
-                        ->get();
-        // $sql = TaskModel::where('user_id', Auth::id())
-        //                 ->orderBy('priority', 'DESC')
-        //                 ->orderBy('period')
-        //                 ->orderBy('created_at')
-        //                 ->toSql();
-        // var_dump($sql);
+                        ->paginate($per_page);
 
         return view('task.list', ['list' => $list]);
     }
