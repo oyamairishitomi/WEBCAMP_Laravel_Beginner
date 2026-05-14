@@ -11,7 +11,19 @@ use App\Models\Task as TaskModel;
 class TaskController extends Controller
 {
     public function list(){
-        return view('task.list');
+        $list = TaskModel::where('user_id', Auth::id())
+                        ->orderBy('priority','DESC')
+                        ->orderBy('period')
+                        ->orderBy('created_at')
+                        ->get();
+        // $sql = TaskModel::where('user_id', Auth::id())
+        //                 ->orderBy('priority', 'DESC')
+        //                 ->orderBy('period')
+        //                 ->orderBy('created_at')
+        //                 ->toSql();
+        // var_dump($sql);
+
+        return view('task.list', ['list' => $list]);
     }
 
     public function register(TaskRegisterPostRequest $request){

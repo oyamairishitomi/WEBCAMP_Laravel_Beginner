@@ -43,3 +43,36 @@ sudo systemctl start mariadb
     エラーがあるよ<br>
 @endif
 
+
+where() の引数
+
+->where('user_id', Auth::id())
+引数	意味
+第1引数 'user_id'	カラム名
+第2引数 Auth::id()	比較する値
+デフォルトで =（イコール）で比較します。SQLに直すと WHERE user_id = 1 になります。
+
+> や < で比較したい場合は第2引数に演算子を挟んで3つ書きます。
+
+
+->where('priority', '>=', 2)  // WHERE priority >= 2
+get() の出どころ
+get() は LaravelのEloquent（ORM）が用意しているメソッドです。
+
+TaskModel::where(...) の時点ではまだSQLを組み立てている途中で、DBには問い合わせていません。最後に get() を呼んで初めてSQLを実行してデータを取得します。
+
+
+TaskModel::where('user_id', Auth::id())  // WHERE句を組み立て中
+         ->orderBy('priority', 'DESC')   // ORDER BY を追加中
+         ->get();                         // ここで初めてSQL実行
+だから toSql() で確認したときも、get() の代わりに toSql() を呼ぶと「組み立てたSQL文字列」が取れたわけです。
+
+クラスの定数は クラス名::定数名 という書き方で外から参照できます。
+
+
+Task::PRIORITY_VALUE        // → [1 => '低い', 2 => '普通', 3 => '高い']
+今回は use App\Models\Task as TaskModel; で Task に TaskModel という別名をつけているので、
+
+
+TaskModel::PRIORITY_VALUE   // → [1 => '低い', 2 => '普通', 3 => '高い']
+と書けるわけです。:: はインスタンスを作らずにクラスのメソッドや定数に直接アクセスするときに使う記号です。
