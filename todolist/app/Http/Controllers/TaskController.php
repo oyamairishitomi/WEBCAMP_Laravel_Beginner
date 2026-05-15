@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskRegisterPostRequest;
 use App\Models\Task as TaskModel;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\CompletedTask as CompletedTaskModel;
 
 class TaskController extends Controller
 {
@@ -85,4 +86,44 @@ class TaskController extends Controller
 
         return redirect('/task/list');
     }
+
+    public function complete(Request $request, $task_id)
+{
+    /* タスクを完了テーブルに移動させる */
+    try {
+        // トランザクション開始
+        DB::beginTransaction();
+
+            // task_idのレコードを取得する
+            $task = $this->getTaskModel($task_id);
+            if ($task === null) {
+                throw new \Exception('');
+            }
+
+            // tasks側を削除する
+            $task->delete();
+
+            // completed_tasks側にinsertする
+            $dask_datum = $task->toArray();
+            unset($dask_datum['created_at']);
+            unset($dask_datum['updated_at']);
+            $r = CompletedTaskModel::create($dask_datum);
+            if ($r === null) {
+                throw new \Exception('');
+            }
+
+        // トランザクション終了
+        DB::commit();
+        $request->session()->flash('front.task_completed_success', true);
+
+    } catch(\Throwable $e) {
+        // トランザクション異常終了
+        DB::rollBack();
+        $request->session()->flash('front.task_completed_failure', true);
+    }
+
+    // 一覧に遷移する
+    return redirect('/task/list');
+}
+
 }
