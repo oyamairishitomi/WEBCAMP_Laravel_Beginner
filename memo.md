@@ -155,3 +155,17 @@ route('example', ['id' => 1, 'page' => 2])
 
 
 Q.テンプレートファイルのときだけ.にするということか？
+
+
+ob_start() → 出力バッファリング開始。この後の echo や fputcsv の出力を画面に出さずに溜め込む
+
+ob_get_clean() → 溜め込んだ出力を文字列として取り出し、バッファを空にする
+
+SplFileObject('php://output', 'w') → 「出力先」をファイルのように扱うためのオブジェクト。fputcsv はファイル書き込み用なので、画面出力に使うためにこう書く
+
+fputcsv($awk) → 配列を1行分のCSV文字列としてファイル（今回は出力）に書き込む
+
+mb_convert_encoding(..., 'SJIS', 'UTF-8') → 文字コードをUTF-8からShift_JIS（Excel用）に変換する
+
+$awk は作業用の一時的な配列の変数名です。
+

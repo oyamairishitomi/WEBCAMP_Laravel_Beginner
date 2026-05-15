@@ -11,13 +11,18 @@ use App\Models\CompletedTask as CompletedTaskModel;
 
 class TaskController extends Controller
 {
+    
+    protected function getListBuilder(){
+        return TaskModel::where('user_id', Auth::id())
+            ->orderBy('priority', 'DESC')
+            ->orderBy('period')
+            ->orderBy('created_at');
+    }
+
     public function list(){
         $per_page = 2;
 
-        $list = TaskModel::where('user_id', Auth::id())
-                        ->orderBy('priority','DESC')
-                        ->orderBy('period')
-                        ->orderBy('created_at')
+        $list = $this->getListBuilder()
                         ->paginate($per_page);
 
         return view('task.list', ['list' => $list]);
@@ -121,9 +126,49 @@ class TaskController extends Controller
         DB::rollBack();
         $request->session()->flash('front.task_completed_failure', true);
     }
+        // 一覧に遷移する
+        return redirect('/task/list');
+    }
 
-    // 一覧に遷移する
-    return redirect('/task/list');
-}
+    public function csvDownload() {
+        $data_list = [
+            'id' => 'タスクID',
+            'name' => 'タスク名',
+            'priority' => '重要度',
+            'period' => '期限',
+            'detail' => 'タスク詳細',
+            'created_at' => 'タスク作成日',
+            'updated_at' => 'タスク修正日',
+            ];
+
+            $list = $this->getListBuilder()->get();
+            
+            ob_start();
+
+            $file = new \SplFileObject('php://output', 'w');
+            $file->fputcsv(array_values($data_list));
+
+            foreach($list as $datum) {
+                $awk = [];
+                foreach ($data_list as $k => $v){
+                    if($k === 'priority'){
+                        $awk[] = $datum->getPriorityString();
+                    } else {
+                        $awk[] = $datum->$k;
+                    }
+                }
+                $file->fputcsv($awk);
+            }
+
+            $csv_string = ob_get_clean();
+
+            $csv_string_sjis = mb_convert_encoding($csv_string, 'SJIS', 'UTF-8');
+
+            $download_filename = 'task_list.' . date('Ymd'). '.csv';
+
+            return response($csv_string_sjis)
+                ->header('Content-Type', 'text/csv')
+                ->header('Content-Disposition', 'attachment; filename="'. $download_filename .'"');
+    }
 
 }
