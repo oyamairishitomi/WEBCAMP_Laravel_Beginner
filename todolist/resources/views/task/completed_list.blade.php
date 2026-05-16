@@ -3,16 +3,19 @@
 
 @section('contents')
           <h1>タスクの完了一覧</h1>
+          <a href="/task/list">タスク一覧に戻る</a>
         <table border="1">
         <tr>
             <th>タスク名
             <th>期限
             <th>重要度
+            <th>タスク終了日
         @foreach ($list as $task)
         <tr>
             <td>{{ $task->name }}
             <td>{{ $task->period }}
             <td>{{ $task->getPriorityString() }}
+            <td>{{ $task->created_at }}
         @endforeach
 
         </table>
