@@ -169,3 +169,30 @@ mb_convert_encoding(..., 'SJIS', 'UTF-8') → 文字コードをUTF-8からShift
 
 $awk は作業用の一時的な配列の変数名です。
 
+Modelは「テーブルと対応するクラス」です。
+
+
+Task モデル       → tasks テーブル
+CompletedTask モデル → completed_tasks テーブル
+User モデル       → users テーブル
+主な役割は2つです。
+
+① DBとのやり取り
+
+
+// tasksテーブルからデータを取得
+TaskModel::where('user_id', 1)->get();
+
+// completed_tasksテーブルにINSERT
+CompletedTaskModel::create($data);
+② そのデータに関連するロジック
+
+
+// 重要度の数値を文字列に変換するメソッド
+public function getPriorityString()
+{
+    return $this::PRIORITY_VALUE[ $this->priority ] ?? '';
+}
+①はEloquentが自動的にやってくれます。②は「このデータに関係する処理」をControllerやテンプレートに直接書かず、Modelにまとめることで整理された構造になります。
+
+「データに関係する処理はModelに書く」と覚えておくとよいです。
