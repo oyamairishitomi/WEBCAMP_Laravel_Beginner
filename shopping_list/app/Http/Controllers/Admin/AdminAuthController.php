@@ -36,8 +36,8 @@ class AdminAuthController extends Controller
         $group_by_columns = ['users.id', 'users.name', 'users.email'];
 
         $users = User::select($group_by_columns)
-                    ->selectRaw('COUNT(items.id) as item_count')
-                    ->leftJoin('items', 'users.id', '=', 'items.user_id')
+                    ->selectRaw('COUNT(completed_items.id) as item_count')
+                    ->leftJoin('completed_items', 'users.id', '=', 'completed_items.user_id')
                     ->groupBy($group_by_columns)
                     ->paginate(10);
 

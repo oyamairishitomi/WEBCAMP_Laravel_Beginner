@@ -1,8 +1,10 @@
 @extends('layout')
 
 @section('contents')
-@if($errors->has('auth'))
-  {{ $errors->first('auth') }}
+@if($errors->any())
+  @foreach($errors->all() as $error)
+  {{ $error }}<br>
+  @endforeach
 @endif
 @if(session('front.user_register_success') == true)
   登録完了しました。
