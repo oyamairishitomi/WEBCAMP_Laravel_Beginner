@@ -42,6 +42,7 @@ Route::prefix('/admin')->group(function() {
   Route::get('/login', [AdminAuthController::class, 'index']);
   Route::post('/login', [AdminAuthController::class, 'login']);
   Route::middleware(['auth:admin'])->group(function(){
+    Route::get('/top', [AdminAuthController::class, 'top']);
     Route::get('/list', [AdminAuthController::class, 'list']);
     Route::get('/logout', [AdminAuthController::class, 'logout']);
   });
