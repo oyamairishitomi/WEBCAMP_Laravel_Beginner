@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('completed_tasks', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->string('name', 128)->comment('タスク名');
-            $table->date('period')->comment('タスクの期限');
+            $table->date('perio
+d')->comment('タスクの期限');
             $table->text('detail')->comment('タスクの詳細');
             $table->unsignedTinyInteger('priority')->comment('重要度:(1:低い, 2:普通, 3:高い)');
             $table->unsignedBigInteger('user_id')->comment('このタスクの所有者');
