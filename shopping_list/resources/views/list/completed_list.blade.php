@@ -12,7 +12,7 @@
         @foreach ($list as $item)
         <tr>
             <td>{{ $item->name }}
-            <td>{{ $item->completed_at }}
+            <td>{{ $item->completed_at->format('Y/m/d') }}
         @endforeach
 
         </table>

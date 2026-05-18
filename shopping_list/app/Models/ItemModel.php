@@ -9,4 +9,7 @@ class ItemModel extends Model
     public $timestamps = false;
     protected $table = 'items';
     protected $fillable = ['name','user_id'];
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }

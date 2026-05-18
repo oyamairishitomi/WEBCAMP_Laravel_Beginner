@@ -20,8 +20,11 @@ use App\Http\Controllers\Admin\AdminAuthController;
 
 Route::get('/', [AuthController::class, 'index'])->name('front.index');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-Route::get('/register', [UserController::class, 'index'])->name('register.index');
-Route::post('/register', [UserController::class, 'register'])->name('register.register');
+
+Route::prefix('/user')->group(function(){
+  Route::get('/register', [UserController::class, 'index'])->name('register.index');
+  Route::post('/register', [UserController::class, 'register'])->name('register.register');
+});
 
 Route::middleware(['auth'])->group(function(){
   Route::get('/list', [ShoppingListController::class, 'list'])->name('list.list');
@@ -33,10 +36,12 @@ Route::middleware(['auth'])->group(function(){
 });
 
 Route::prefix('/admin')->group(function() {
+  Route::get('/', function() {
+    return redirect('/admin/login');
+    });
   Route::get('/login', [AdminAuthController::class, 'index']);
   Route::post('/login', [AdminAuthController::class, 'login']);
   Route::middleware(['auth:admin'])->group(function(){
-    Route::get('/top', [AdminAuthController::class, 'top']);
     Route::get('/list', [AdminAuthController::class, 'list']);
     Route::get('/logout', [AdminAuthController::class, 'logout']);
   });

@@ -17,7 +17,7 @@ class ShoppingListController extends Controller
     }
 
     public function list(){
-        $per_page = 10;
+        $per_page = 3;
 
         $list = $this->getListBuilder()
                     ->paginate($per_page);

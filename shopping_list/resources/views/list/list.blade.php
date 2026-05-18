@@ -5,6 +5,9 @@
   @if($errors->has('name'))
     {{ $errors->first('name') }}
   @endif
+@if (session('front.list_register_success') == true)
+    「買うもの」を登録しました！！<br>
+@endif
   <form action="/list/register" method="post">
     @csrf
     「買うもの」名：<input type="text" name="name" value="{{ old('name') }}"><br>
@@ -23,15 +26,15 @@
 
       @foreach ($list as $item)
       <tr>
-      <td>{{ $item-> created_at }}</td>
+      <td>{{ $item-> created_at->format('Y/m/d') }}</td>
       <td>{{ $item -> name }}</td>
       <td><form action="{{ route('complete', ['id' => $item->id]) }}" method="post">
           @csrf
-          <button onclick='return confirm("このタスクを「完了」にしていいですか？")'>完了</button></form></td>
+          <button onclick='return confirm("買うものを「完了」にしていいですか？")'>完了</button></form></td>
       <td><form action="{{ route('delete', ['id' => $item->id]) }}" method="post">
           @csrf
           @method('DELETE')
-          <button onclick='return confirm("このタスクを「削除」していいですか？")'>削除</button></form></td>
+          <button onclick='return confirm("買うものを「削除」していいですか？")'>削除</button></form></td>
       </tr>
       @endforeach
   </table>
